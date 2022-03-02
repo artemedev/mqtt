@@ -3,6 +3,9 @@
 let mqtt = require("mqtt");
 let Topic = "#";
 let Broker_URL = "mqtt://192.168.0.25";
+// const mongoose = require('mongoose');
+const { MongoClient } = require("mongodb");
+const clientMongo = new MongoClient('mongodb+srv://mongo:root@cluster0.l9ghz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
 
 let options = {
     clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
@@ -11,6 +14,31 @@ let options = {
     password: "vbrm.nn_ctc",
     keepalive: 60,
 };
+
+
+const start = async(topic, key) => {
+    try {
+        await clientMongo.connect()
+        console.log('соединение установлено');
+        // if (!clientMongo.db().createCollection('Test')) {
+
+        // }
+        // key.id = topic;
+        if (!clientMongo.db().collection(topic)) {
+            await clientMongo.db().createCollection(topic) //создание коллекции
+        }
+        // console.log(topic);
+
+
+        const tests = clientMongo.db().collection(topic);
+
+        await tests.insertOne(key);
+
+    } catch (e) {
+        console.log(e);
+
+    }
+}
 
 let client = mqtt.connect(Broker_URL, options);
 client.on("connect", mqtt_connect);
@@ -39,56 +67,20 @@ function mqtt_error(err) {
 function after_publish() {}
 
 function mqtt_messsageReceived(topic, message, packet) {
-    // let topic2 = topic.split("/", 1); 
-
     let topic3 = topic.split("/", );
-    // console.log(topic3);
-    // if (topic3[0] != 0) {
-    //     let topic
-    // }
-    // let arr1 = topic3.reverse()
-    // console.log("-----------------------------------------------");
-    // let arr2 = arr1[0];
-
-    // console.log("arr2", arr2);
-
     let message_str = message.toString();
     insert_message(topic3, message_str, packet);
 }
 
 function mqtt_close() {}
 
-const Pool = require("pg").Pool;
-const pool = new Pool({
-    user: "postgres",
-    password: "root",
-    host: "localhost",
-    port: 5432,
-    database: "usersdb2",
-});
-
-pool.connect(function(err) {
-    if (err) throw err;
-});
-
-module.exports = pool;
-
 function insert_message(topic, message_str, packet) {
-    // console.log("-----------------------------------------------");
-
-    console.log("message_str", message_str);
-    // console.log("message_str =", message_str);
-    let message_arr = extract_string(message_str);
-    // console.log("message_arr =", message_arr);
-    let clientID = message_arr[0];
-    let message = message_arr[1];
-
-    // topic[0]
-    const text = `INSERT INTO users(clientID,topic,message) VALUES($1, $2, $3) RETURNING *`;
-    const values = [topic[0], topic[1], message_str];
-    pool.query(text, values, (err, res) => {
-        if (err) {} else {}
-    });
+    if (topic[1] == undefined) {
+        if (message_str !== 'begin') {
+            let message_str_JSON = JSON.parse(message_str);
+            if (message_str_JSON != '0') start(topic[0], message_str_JSON)
+        }
+    }
 }
 
 function extract_string(message_str) {
@@ -96,9 +88,10 @@ function extract_string(message_str) {
     return message_arr;
 }
 
-let delimiter = "/";
+
 
 function countInstances(message_str) {
+    let delimiter = "/";
     let substrings = message_str.split(delimiter);
     return substrings.length - 1;
 }

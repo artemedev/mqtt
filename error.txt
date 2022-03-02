@@ -1,0 +1,23 @@
+<--- Last few GCs --->
+
+[20424:000002C4E70421A0] 365399160 ms: Scavenge (reduce) 3743.0 (4108.9) -> 3742.7 (4109.6) MB, 3.5 / 0.0 ms  (average mu = 0.393, current mu = 0.406) allocation failure
+[20424:000002C4E70421A0] 365399169 ms: Scavenge (reduce) 3743.4 (4106.6) -> 3743.1 (4108.1) MB, 3.5 / 0.0 ms  (average mu = 0.393, current mu = 0.406) allocation failure
+
+
+<--- JS stacktrace --->
+
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+ 1: 00007FF663FD4C9F napi_wrap+111007
+ 2: 00007FF663F78226 v8::base::CPU::has_sse+59910
+ 3: 00007FF663F79126 node::OnFatalError+294
+ 4: 00007FF664852ABE v8::Isolate::ReportExternalAllocationLimitReached+94
+ 5: 00007FF66483788D v8::SharedArrayBuffer::Externalize+781
+ 6: 00007FF6646E09DC v8::internal::Heap::EphemeronKeyWriteBarrierFromCode+1516
+ 7: 00007FF6646EBDFA v8::internal::Heap::ProtectUnprotectedMemoryChunks+1258
+ 8: 00007FF6646E8F39 v8::internal::Heap::PageFlagsAreConsistent+2457
+ 9: 00007FF6646DDAD1 v8::internal::Heap::CollectGarbage+2049
+10: 00007FF6646DBCD5 v8::internal::Heap::AllocateExternalBackingStore+1349
+11: 00007FF6646FC14B v8::internal::Factory::NewFillerObject+203
+12: 00007FF66442AC01 v8::internal::interpreter::JumpTableTargetOffsets::iterator::operator=+1409
+13: 00007FF6648DB97D v8::internal::SetupIsolateDelegate::SetupHeap+465325
+14: 00000041862495C1 

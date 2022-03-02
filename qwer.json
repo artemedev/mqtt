@@ -1,0 +1,15 @@
+{
+    "PosixTime": "1639491795",
+    "BreakCount": " 0",
+    "MoveCount": " 0",
+    "DoorCount": "0",
+    "DoorStatus": "close",
+    "DataTime": "21/12/14,14:23:00",
+    "BatVoltage": "3.04",
+    "TamperMove": "open",
+    "TamperBreak": "open",
+    "SignalQuality": "14",
+    "SimIMSI": "250015140012814",
+    "SimICCID": "89701010051400128144",
+    "fwInstall": "DoorPcb01.D210924T113933"
+}
